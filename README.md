@@ -1,2 +1,21 @@
-# Robotic_Car_TeamC1-HSHL
-# Autonomous Vehicle Project  Goal: Build a self-driving vehicle using line and obstacle detection, color-based navigation, and route optimization. Tasks include oval/figure-eight driving, parking, and speed tuning. Team shares all code, CAD files, and progress via Git. Tasks tracked in `Tasks.xlsx`.
+# Arduino Autonomous Vehicle 🚗🤖
+
+## 🎯 Project Goal
+
+Develop an autonomous vehicle capable of navigating a track **without human control**, using:
+
+- **Line detection** for navigation
+- **Obstacle detection and avoidance**
+- **Color-based object identification**
+   Ex: (to decide route or remove obstacles)
+- **Speed optimization** for smooth operation
+- **Multiple routing scenarios**:
+  - Oval track
+  - Figure-eight track
+  - Parking maneuvers
+
+## 👥 Team Members
+- Mohamed Abdo
+- Ruhul Kuddus
+- Md Rahman
+- Aamir Ejaz
