@@ -1,4 +1,7 @@
 - How to masure the Wheel Hight?
 - How to set the Tolrance?
 - How to Dig a thread intot eh Chasis based on screwes mm?
--
+- how many Ultrasonics & Holder
+- Do we have Servo Motor or not
+- IR Holder (Screw)?
+- Color sensor
