@@ -16,6 +16,6 @@ Develop an autonomous vehicle capable of navigating a track **without human cont
 
 ## 👥 Team Members
 - Mohamed Abdo
-- Ruhul Kuddus
+- Md Ruhul Kuddus Saleh
 - Md Rahman
 - Aamir Ejaz
