@@ -1,12 +1,12 @@
-// Created by Md Mostafizur Rahman on 30/04/2025.
 #include <IRremote.h>
+#include <Servo.h>
 
-// Motor 1
+// Motor 1 (Left Motor)
 const int enA = 10;
 const int in1 = 7;
 const int in2 = 6;
 
-// Motor 2
+// Motor 2 (Right Motor)
 const int enB = 9;
 const int in3 = 12;
 const int in4 = 13;
@@ -18,8 +18,12 @@ const int trigger = 3;
 // IR receiver
 const int IR_RECEIVE_PIN = 2;
 
+// Servo
+Servo servo_11;
+int servoPos = 90;  // Start at center position (90°)
+
 // Speed and distance
-int speed = 150;
+int speed = 150;  // Default speed value
 long duration;
 float distance_F;
 
@@ -31,6 +35,7 @@ bool obstacleDetected = false;
 void setup() {
   Serial.begin(9600);
 
+  // Motor pins setup
   pinMode(enA, OUTPUT);
   pinMode(enB, OUTPUT);
   pinMode(in1, OUTPUT);
@@ -38,11 +43,19 @@ void setup() {
   pinMode(in3, OUTPUT);
   pinMode(in4, OUTPUT);
 
+  // Ultrasonic sensor setup
   pinMode(trigger, OUTPUT);
   pinMode(echo, INPUT);
 
-  IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK); // Start IR receiver
+  // Servo setup
+  servo_11.attach(11, 500, 2500);  // Attach servo to pin 11
+  servo_11.write(90);  // Center the servo
+  delay(1000); // Wait for the servo to stabilize
 
+  // IR receiver setup
+  IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK);  // Start IR receiver
+
+  // Initialize distance sensor
   distance_F = Ultrasonic_read();
   delay(500);
 
@@ -63,11 +76,9 @@ void loop() {
       obstacleDetected = true;
       Serial.println("Obstacle detected! Stopped.");
     }
-    delay(100); // Short delay to prevent rapid checks
-    return; // Skip the rest of the loop
-  }
-  else if (obstacleDetected) {
-    // Obstacle has moved away, resume previous movement
+    delay(100);  // Short delay to prevent rapid checks
+    return;  // Skip the rest of the loop
+  } else if (obstacleDetected) {
     obstacleDetected = false;
     Serial.println("Obstacle cleared. Resuming movement.");
     resumeMovement();
@@ -110,6 +121,9 @@ void loop() {
 
     IrReceiver.resume();  // ready to receive next signal
   }
+
+  // Sweep the servo
+  sweepServo();
 }
 
 void resumeMovement() {
@@ -127,7 +141,7 @@ void resumeMovement() {
       turnRight();
       break;
     case STOPPED:
-      // Do nothing, remain stopped
+      Stop();
       break;
   }
 }
@@ -139,11 +153,11 @@ long Ultrasonic_read() {
   digitalWrite(trigger, HIGH);
   delayMicroseconds(10);
   digitalWrite(trigger, LOW);
-  long time = pulseIn(echo, HIGH, 30000); // Max wait time = 30ms (for safety)
+  long time = pulseIn(echo, HIGH, 30000);  // Max wait time = 30ms (for safety)
   if (time == 0) {
-    return 999; // No echo received, assume no obstacle
+    return 999;  // No echo received, assume no obstacle
   }
-  return time / 29 / 2; // distance in cm
+  return time / 29 / 2;  // distance in cm
 }
 
 // --- Movement Functions ---
@@ -216,3 +230,28 @@ void speedDown() {
     resumeMovement();
   }
 }
+
+
+// --- Servo Sweep Function ---
+void sweepServo() {
+  // Left sweep: 90° → 0°
+  for (servoPos = 90; servoPos >= 0; servoPos--) {
+    servo_11.write(servoPos);
+    delay(15);
+  }
+
+  // Right sweep: 0° → 180°
+  for (servoPos = 0; servoPos <= 180; servoPos++) {
+    servo_11.write(servoPos);
+    delay(15);
+  }
+
+  // Return to center: 180° → 90°
+  for (servoPos = 180; servoPos >= 90; servoPos--) {
+    servo_11.write(servoPos);
+    delay(15);
+  }
+
+  delay(500);  // Pause at center
+}
+
