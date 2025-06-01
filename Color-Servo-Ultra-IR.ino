@@ -1,40 +1,31 @@
 #include <Servo.h>
 
-// Motor Pins
 #define enA 10
 #define in1 9
 #define in2 8
 #define in3 7
 #define in4 6
 #define enB 5
-
-// IR Sensors
 #define L_S A0
 #define R_S A1
-
-// Ultrasonic Sensor
 #define trigPin 12
 #define echoPin 13
-
-// Color Sensor (TCS3200)
 #define S0 11
 #define S1 4
 #define S2 3
 #define S3 2
 #define colorOut A2
-
-// Servo Motor
 #define servoPin A5
 Servo scanServo;
-int servoPos = 50;                    // Current servo angle
-bool sweepingRight = true;           // Direction toggle
-unsigned long lastServoMoveTime = 0; // Time tracking
+int servoPos = 50;                    
+bool sweepingRight = true;           
+unsigned long lastServoMoveTime = 0; 
 
 
 int forwardSpeed = 70;
 int turnSpeed = 50;
 int approachThreshold = 15;  // cm
-int scanThreshold = 2.8;       // cm
+int scanThreshold = 2.8;     // cm
 
 bool ultrasonicEnabled = true;
 bool approaching = false;
@@ -53,7 +44,6 @@ void setup() {
   pinMode(enB, OUTPUT);
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
-
   pinMode(S0, OUTPUT);
   pinMode(S1, OUTPUT);
   pinMode(S2, OUTPUT);
@@ -72,7 +62,7 @@ void loop() {
   int rightIR = digitalRead(R_S);
   int distance = ultrasonicEnabled ? getDistance() : 100;
 
-  // Servo scanning in range 40° ↔ 60°
+  // Servo scanning 
   if (millis() - lastServoMoveTime >= 100) {
     if (sweepingRight) {
       servoPos += 20;
@@ -236,28 +226,38 @@ void driveBackwards(int cm) {
 }
 
 void forward() {
-  digitalWrite(in1, HIGH); digitalWrite(in2, LOW);
-  digitalWrite(in3, LOW); digitalWrite(in4, HIGH);
+  digitalWrite(in1, HIGH);
+  digitalWrite(in2, LOW);
+  digitalWrite(in3, LOW);
+  digitalWrite(in4, HIGH);
 }
 
 void backward() {
-  digitalWrite(in1, LOW); digitalWrite(in2, HIGH);
-  digitalWrite(in3, HIGH); digitalWrite(in4, LOW);
+  digitalWrite(in1, LOW);
+  digitalWrite(in2, HIGH);
+  digitalWrite(in3, HIGH);
+  digitalWrite(in4, LOW);
 }
 
 void turnRight() {
-  digitalWrite(in1, HIGH); digitalWrite(in2, LOW);
-  digitalWrite(in3, HIGH); digitalWrite(in4, LOW);
+  digitalWrite(in1, HIGH);
+  digitalWrite(in2, LOW);
+  digitalWrite(in3, HIGH);
+  digitalWrite(in4, LOW);
 }
 
 void turnLeft() {
-  digitalWrite(in1, LOW); digitalWrite(in2, HIGH);
-  digitalWrite(in3, LOW); digitalWrite(in4, HIGH);
+  digitalWrite(in1, LOW);
+  digitalWrite(in2, HIGH);
+  digitalWrite(in3, LOW);
+  digitalWrite(in4, HIGH);
 }
 
 void Stop() {
-  digitalWrite(in1, LOW); digitalWrite(in2, LOW);
-  digitalWrite(in3, LOW); digitalWrite(in4, LOW);
+  digitalWrite(in1, LOW);
+  digitalWrite(in2, LOW);
+  digitalWrite(in3, LOW);
+  digitalWrite(in4, LOW);
 }
 void driveCurveLeft(int cm) {
   int t = cm * 30;
@@ -273,22 +273,20 @@ void rotate180() {
   analogWrite(enA, forwardSpeed);
   analogWrite(enB, forwardSpeed);
   turnLeft();  // Rotate in place
-  delay(800); // Calibrated for 180°
+  delay(800); // wait till rotate 180° is Done
   Stop();
   delay(200);
 }
 
 
-// ✅ Color handler function
 void handleDetectedColor(String color) {
   if (color == "RED") {
-    Serial.println("Obstacle is RED → Executing RED maneuver");
     turnRight();
     delay(1000);
     analogWrite(enA, forwardSpeed);
     analogWrite(enB, forwardSpeed);
     forward();
-    delay(400); // ~20 cm
+    delay(400); // 20 cm
     Stop();
     delay(300);
 
@@ -298,7 +296,7 @@ void handleDetectedColor(String color) {
     delay(300);
 
     forward();
-    delay(1000); // move ~50 cm forward
+    delay(1000); // move 50 cm forward
     Stop();
     delay(300);
 
@@ -306,8 +304,6 @@ void handleDetectedColor(String color) {
     delay(500); // scan for black line again
     Stop();
     delay(300);
-
-    Serial.println("RED maneuver complete → Resuming");
   }
 
   else if (color == "GREEN") { //working fine now (tested_Abdo)
@@ -319,23 +315,13 @@ void handleDetectedColor(String color) {
   }
 
 else if (color == "BLUE") {
-  Serial.println("Obstacle is BLUE → Executing parking maneuver");
-
   // Step 1: Reverse 30 cm
   driveBackwards(30);
-
-  // Step 2: Curve left ~30 cm
-  driveCurveLeft(30);  // Simulated diagonal-left
-
-  // Step 3: Rotate 180°
+  driveCurveLeft(30);  
   rotate180();
-
   Serial.println("BLUE maneuver complete → Parked");
   while (true);  // Stay parked
 }
-
-
-
   else {
     Serial.println("Obstacle is " + color + " → Stopping");
     Stop();
