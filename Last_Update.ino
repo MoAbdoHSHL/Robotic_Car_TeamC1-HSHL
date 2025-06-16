@@ -155,10 +155,17 @@ void driveCurveLeft(int cm) {
 }
 
 void rotate180() {
-  int rotateSpeed = 100; // or 110
+  int rotateSpeed = 100; 
   analogWrite(enA, rotateSpeed);
   analogWrite(enB, rotateSpeed);
-  turnLeft(); delay(900); // adjust to fit the speed
+  turnLeft(); delay(900); 
+  Stop(); delay(200);
+}
+void rotate90() {
+  int rotateSpeed = 100;
+  analogWrite(enA, rotateSpeed);
+  analogWrite(enB, rotateSpeed);
+  turnLeft(); delay(450); 
   Stop(); delay(200);
 }
 
@@ -200,13 +207,20 @@ void handleDetectedColor(String color) {
     scanWithServo();
     rotate180();
     Serial.println("RED maneuver complete → Resuming line following");
+
   } else if (color == "GREEN") {
-    driveForward(40, 100); Stop(); delay(300); driveBackwards(60);
-  } else if (color == "BLUE") {
-    driveBackwards(30); driveCurveLeft(30); rotate180();
-    Serial.println("BLUE maneuver complete → Parked");
-    while (true);
-  } else {
+    driveForward(40, 100); Stop(); delay(300); driveBackwards(40);
+
+} else if (color == "BLUE") {
+  driveBackwards(5);
+  scanWithServo();
+  rotate90();
+  driveBackwards(30);
+  Stop();
+  Serial.println("BLUE maneuver complete → Parked");
+  while (true);
+}
+ else {
     Serial.println("Obstacle is " + color + " → Stopping");
     Stop();
   }
