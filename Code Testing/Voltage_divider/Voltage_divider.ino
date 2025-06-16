@@ -10,18 +10,23 @@
 #define trigPin 12
 #define echoPin 13
 
-int forwardSpeed = 70;
-int turnSpeed = 80;
-int curveDelay = 100;  // duration in ms for correction turn
+int forwardSpeed = 100;      // Increased speed for better response
+int turnSpeedLeft = 60;      // For turning left: reduce left motor speed
+int turnSpeedRight = 60;     // For turning right: reduce right motor speed
 int approachThreshold = 20;  // obstacle distance in cm
 
 void setup() {
   Serial.begin(9600);
-  pinMode(R_S, INPUT); pinMode(L_S, INPUT);
-  pinMode(enA, OUTPUT); pinMode(enB, OUTPUT);
-  pinMode(in1, OUTPUT); pinMode(in2, OUTPUT);
-  pinMode(in3, OUTPUT); pinMode(in4, OUTPUT);
-  pinMode(trigPin, OUTPUT); pinMode(echoPin, INPUT);
+  pinMode(R_S, INPUT);
+  pinMode(L_S, INPUT);
+  pinMode(enA, OUTPUT);
+  pinMode(enB, OUTPUT);
+  pinMode(in1, OUTPUT);
+  pinMode(in2, OUTPUT);
+  pinMode(in3, OUTPUT);
+  pinMode(in4, OUTPUT);
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
 }
 
 void loop() {
@@ -41,79 +46,31 @@ void loop() {
     return;
   }
 
-  // Both sensors on white: go forward
+  // Line following logic
   if (leftIR == 0 && rightIR == 0) {
-    analogWrite(enA, forwardSpeed);
-    analogWrite(enB, forwardSpeed);
-    forward();
-    
-else if ((leftIR == 0) && (rightIR == 1)) {
-  // Turn right gently until line is found again
-  analogWrite(enA, turnSpeed / 2);  // slow left
-  analogWrite(enB, turnSpeed);      // normal right
-  forward();
-  while (digitalRead(R_S) == 1 && digitalRead(L_S) == 0) {
-    // wait until right IR detects line again
+    moveForward(forwardSpeed, forwardSpeed);  // Go straight
+  } else if (leftIR == 1 && rightIR == 0) {
+    moveForward(turnSpeedLeft, forwardSpeed);  // Turn left gently
+  } else if (leftIR == 0 && rightIR == 1) {
+    moveForward(forwardSpeed, turnSpeedRight); // Turn right gently
+  } else {
+    Stop();  // Both black or undefined
   }
-  Stop();
-  delay(50);
-} 
-else if ((leftIR == 1) && (rightIR == 0)) {
-  // Turn left gently until line is found again
-  analogWrite(enA, turnSpeed);      // normal left
-  analogWrite(enB, turnSpeed / 2);  // slow right
-  forward();
-  while (digitalRead(L_S) == 1 && digitalRead(R_S) == 0) {
-    // wait until left IR detects line again
-  }
-  Stop();
-  delay(50);
 }
 
-}
-
-// Movement functions
-void forward() {
+// Smooth motor control
+void moveForward(int speedA, int speedB) {
+  analogWrite(enA, speedA);
+  analogWrite(enB, speedB);
   digitalWrite(in1, HIGH); digitalWrite(in2, LOW);
   digitalWrite(in3, LOW); digitalWrite(in4, HIGH);
-}
-
-void backward() {
-  digitalWrite(in1, LOW); digitalWrite(in2, HIGH);
-  digitalWrite(in3, HIGH); digitalWrite(in4, LOW);
-}
-
-void turnLeft() {
-  digitalWrite(in1, LOW); digitalWrite(in2, HIGH);
-  digitalWrite(in3, LOW); digitalWrite(in4, HIGH);
-}
-
-void turnRight() {
-  digitalWrite(in1, HIGH); digitalWrite(in2, LOW);
-  digitalWrite(in3, HIGH); digitalWrite(in4, LOW);
 }
 
 void Stop() {
+  analogWrite(enA, 0);
+  analogWrite(enB, 0);
   digitalWrite(in1, LOW); digitalWrite(in2, LOW);
   digitalWrite(in3, LOW); digitalWrite(in4, LOW);
-}
-
-// Curve left slightly
-void curveLeft() {
-  analogWrite(enA, turnSpeed);
-  analogWrite(enB, turnSpeed);
-  turnLeft();
-  delay(curveDelay);
-  Stop();
-}
-
-// Curve right slightly
-void curveRight() {
-  analogWrite(enA, turnSpeed);
-  analogWrite(enB, turnSpeed);
-  turnRight();
-  delay(curveDelay);
-  Stop();
 }
 
 // Ultrasonic distance in cm
@@ -121,6 +78,6 @@ int getDistance() {
   digitalWrite(trigPin, LOW); delayMicroseconds(2);
   digitalWrite(trigPin, HIGH); delayMicroseconds(10);
   digitalWrite(trigPin, LOW);
-  long duration = pulseIn(echoPin, HIGH, 20000);
+  long duration = pulseIn(echoPin, HIGH, 20000); // timeout 20ms
   return duration * 0.034 / 2;
 }
