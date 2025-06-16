@@ -134,30 +134,23 @@ void loop() {
     analogWrite(enA, forwardSpeed);
     analogWrite(enB, forwardSpeed);
     forward();
-  }else if ((leftIR == 0) && (rightIR == 1)) {
-  // Turn right gently until line is found again
-  analogWrite(enA, turnSpeed / 2);  // slow left
-  analogWrite(enB, turnSpeed);      // normal right
-  forward();
-  while (digitalRead(R_S) == 1 && digitalRead(L_S) == 0) {
-    // wait until right IR detects line again
-  }
-  Stop();
-  delay(50);
-} 
-else if ((leftIR == 1) && (rightIR == 0)) {
-  // Turn left gently until line is found again
-  analogWrite(enA, turnSpeed);      // normal left
-  analogWrite(enB, turnSpeed / 2);  // slow right
-  forward();
-  while (digitalRead(L_S) == 1 && digitalRead(R_S) == 0) {
-    // wait until left IR detects line again
-  }
-  Stop();
-  delay(50);
-}
-
-   else {
+  } else if ((leftIR == 0) && (rightIR == 1)) {
+    analogWrite(enA, turnSpeed);
+    analogWrite(enB, turnSpeed);
+    turnRight();
+    delay(50);
+    //delay(100);
+    //forward();
+    delay(50);
+  } else if ((leftIR == 1) && (rightIR == 0)) {
+    analogWrite(enA, turnSpeed);
+    analogWrite(enB, turnSpeed);
+    delay(50);
+    turnLeft();
+    //delay(100);
+    //forward();
+    delay(50);
+  } else {
     Stop();
   }
 
