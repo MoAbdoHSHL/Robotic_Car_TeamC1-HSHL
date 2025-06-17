@@ -2,7 +2,7 @@
 <!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.6//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_6.dtd'>
 <nta>
 	<declaration>// Place global declarations here.
-chan  Moveforwardfromright, TurnLeft, MoveforwardfromLeft, TurnRight, GreenObstacle, RedObstacle, BlueObstacle, Parked, Obstacle,Move,BacktoLineAfterOvertake,BacktoLineAfterMove;</declaration>
+chan  Moveforwardfromright, TurnLeft, MoveforwardfromLeft, TurnRight, GreenObstacle, RedObstacle, BlueObstacle, Parked, Obstacle,Move,Rotate180andMoveForward,BacktoLineAfterMove;</declaration>
 	<template>
 		<name>Car</name>
 		<location id="id0" x="0" y="-127">
@@ -69,7 +69,7 @@ chan  Moveforwardfromright, TurnLeft, MoveforwardfromLeft, TurnRight, GreenObsta
 		<transition id="id15">
 			<source ref="id3"/>
 			<target ref="id0"/>
-			<label kind="synchronisation" x="136" y="8">BacktoLineAfterOvertake!</label>
+			<label kind="synchronisation" x="136" y="8">Rotate180andMoveForward!</label>
 			<nail x="178" y="25"/>
 		</transition>
 		<transition id="id16">
@@ -207,7 +207,7 @@ chan  Moveforwardfromright, TurnLeft, MoveforwardfromLeft, TurnRight, GreenObsta
 		<transition id="id45">
 			<source ref="id42"/>
 			<target ref="id38"/>
-			<label kind="synchronisation" x="-415" y="-714">BacktoLineAfterOvertake?</label>
+			<label kind="synchronisation" x="-415" y="-714">Rotate180andMoveForward?</label>
 			<nail x="-314" y="-697"/>
 			<nail x="-314" y="-918"/>
 			<nail x="-1207" y="-918"/>
