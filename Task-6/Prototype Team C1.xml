@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.6//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_6.dtd'>
+<nta>
+	<declaration>// Place global declarations here.
+chan  Moveforwardfromright, TurnLeft, MoveforwardfromLeft, TurnRight, GreenObstacle, RedObstacle, BlueObstacle, Parked, Obstacle,Move,BacktoLineAfterOvertake,BacktoLineAfterMove;</declaration>
+	<template>
+		<name>Car</name>
+		<location id="id0" x="0" y="-127">
+			<name x="-42" y="-110">MoveForward</name>
+		</location>
+		<location id="id1" x="161" y="-288">
+			<name x="151" y="-322">CarTurnRight</name>
+		</location>
+		<location id="id2" x="-170" y="-288">
+			<name x="-180" y="-322">CarTurnLeft</name>
+		</location>
+		<location id="id3" x="221" y="-34">
+			<name x="211" y="-68">OvertakeObstacle</name>
+		</location>
+		<location id="id4" x="-263" y="-144">
+			<name x="-325" y="-128">SwitchOn</name>
+		</location>
+		<location id="id5" x="229" y="-144">
+			<name x="246" y="-161">Stop</name>
+		</location>
+		<location id="id6" x="8" y="59">
+			<name x="-2" y="25">Movetheobstacle</name>
+		</location>
+		<location id="id7" x="-212" y="25">
+			<name x="-222" y="-9">Park</name>
+		</location>
+		<init ref="id4"/>
+		<transition id="id8">
+			<source ref="id5"/>
+			<target ref="id0"/>
+			<nail x="229" y="-212"/>
+		</transition>
+		<transition id="id9">
+			<source ref="id0"/>
+			<target ref="id5"/>
+			<label kind="synchronisation" x="119" y="-161">Obstacle!</label>
+		</transition>
+		<transition id="id10">
+			<source ref="id4"/>
+			<target ref="id0"/>
+			<label kind="synchronisation" x="-204" y="-161">Move!</label>
+		</transition>
+		<transition id="id11">
+			<source ref="id7"/>
+			<target ref="id4"/>
+			<label kind="synchronisation" x="-246" y="-110">Parked!</label>
+		</transition>
+		<transition id="id12">
+			<source ref="id0"/>
+			<target ref="id7"/>
+			<label kind="synchronisation" x="-194" y="-68">BlueObstacle!</label>
+		</transition>
+		<transition id="id13">
+			<source ref="id6"/>
+			<target ref="id0"/>
+			<label kind="synchronisation" x="-204" y="34">BacktoLineAfterMove!</label>
+			<nail x="-68" y="51"/>
+		</transition>
+		<transition id="id14">
+			<source ref="id0"/>
+			<target ref="id6"/>
+			<label kind="synchronisation" x="-34" y="-34">GreenObstacle!</label>
+		</transition>
+		<transition id="id15">
+			<source ref="id3"/>
+			<target ref="id0"/>
+			<label kind="synchronisation" x="136" y="8">BacktoLineAfterOvertake!</label>
+			<nail x="178" y="25"/>
+		</transition>
+		<transition id="id16">
+			<source ref="id0"/>
+			<target ref="id3"/>
+			<label kind="synchronisation" x="85" y="-102">RedObstacle!</label>
+		</transition>
+		<transition id="id17">
+			<source ref="id2"/>
+			<target ref="id0"/>
+			<label kind="synchronisation" x="-152" y="-305">MoveforwardfromLeft!</label>
+			<nail x="-34" y="-288"/>
+		</transition>
+		<transition id="id18">
+			<source ref="id0"/>
+			<target ref="id2"/>
+			<label kind="synchronisation" x="-152" y="-224">TurnLeft!</label>
+		</transition>
+		<transition id="id19">
+			<source ref="id1"/>
+			<target ref="id0"/>
+			<label kind="synchronisation" x="51" y="-305">Moveforwardfromright!</label>
+			<nail x="51" y="-288"/>
+		</transition>
+		<transition id="id20">
+			<source ref="id0"/>
+			<target ref="id1"/>
+			<label kind="synchronisation" x="18" y="-224">TurnRight!</label>
+		</transition>
+	</template>
+	<template>
+		<name x="5" y="5">RightLineDetect</name>
+		<declaration>// Place local declarations here.
+</declaration>
+		<location id="id21" x="-331" y="-43">
+			<name x="-484" y="-51">SwitchOn</name>
+		</location>
+		<location id="id22" x="25" y="-42">
+			<name x="15" y="-76">RightIRon</name>
+		</location>
+		<location id="id23" x="-136" y="-42">
+			<name x="-195" y="-76">CarNotOnLine</name>
+		</location>
+		<location id="id24" x="272" y="-42">
+			<name x="238" y="-33">MoveForward</name>
+		</location>
+		<init ref="id21"/>
+		<transition id="id25">
+			<source ref="id24"/>
+			<target ref="id21"/>
+			<nail x="272" y="-170"/>
+			<nail x="-340" y="-161"/>
+		</transition>
+		<transition id="id26">
+			<source ref="id22"/>
+			<target ref="id24"/>
+			<label kind="synchronisation" x="43" y="-63">Moveforwardfromright?</label>
+		</transition>
+		<transition id="id27">
+			<source ref="id23"/>
+			<target ref="id22"/>
+			<label kind="synchronisation" x="-118" y="-59">TurnRight?</label>
+		</transition>
+		<transition id="id28">
+			<source ref="id21"/>
+			<target ref="id23"/>
+		</transition>
+	</template>
+	<template>
+		<name>LeftLineDetect</name>
+		<location id="id29" x="272" y="-42">
+			<name x="238" y="-33">MoveForward</name>
+		</location>
+		<location id="id30" x="-331" y="-43">
+			<name x="-484" y="-51">SwitchOn</name>
+		</location>
+		<location id="id31" x="25" y="-42">
+			<name x="15" y="-76">LeftIRon</name>
+		</location>
+		<location id="id32" x="-136" y="-42">
+			<name x="-195" y="-76">CarNotOnLine</name>
+		</location>
+		<init ref="id30"/>
+		<transition id="id33">
+			<source ref="id29"/>
+			<target ref="id30"/>
+			<nail x="272" y="-170"/>
+			<nail x="-340" y="-161"/>
+		</transition>
+		<transition id="id34">
+			<source ref="id31"/>
+			<target ref="id29"/>
+			<label kind="synchronisation" x="43" y="-63">MoveforwardfromLeft?</label>
+		</transition>
+		<transition id="id35">
+			<source ref="id32"/>
+			<target ref="id31"/>
+			<label kind="synchronisation" x="-118" y="-59">TurnLeft?</label>
+		</transition>
+		<transition id="id36">
+			<source ref="id30"/>
+			<target ref="id32"/>
+		</transition>
+	</template>
+	<template>
+		<name>Obstacles</name>
+		<location id="id37" x="-952" y="-697">
+			<name x="-1020" y="-731">MeasuringDistance</name>
+		</location>
+		<location id="id38" x="-1114" y="-697">
+			<name x="-1165" y="-731">Obstaclefree</name>
+		</location>
+		<location id="id39" x="-671" y="-697">
+			<name x="-681" y="-731">ColourCheck</name>
+		</location>
+		<location id="id40" x="-841" y="-697">
+			<name x="-909" y="-680">Obstecledetected</name>
+		</location>
+		<location id="id41" x="-476" y="-850">
+			<name x="-486" y="-884">BlueObject</name>
+		</location>
+		<location id="id42" x="-433" y="-697">
+			<name x="-443" y="-731">RedObject</name>
+		</location>
+		<location id="id43" x="-442" y="-561">
+			<name x="-452" y="-595">GreenObject</name>
+		</location>
+		<init ref="id38"/>
+		<transition id="id44">
+			<source ref="id43"/>
+			<target ref="id38"/>
+			<label kind="synchronisation" x="-1095" y="-578">BacktoLineAfterMove?</label>
+			<nail x="-1113" y="-561"/>
+		</transition>
+		<transition id="id45">
+			<source ref="id42"/>
+			<target ref="id38"/>
+			<label kind="synchronisation" x="-415" y="-714">BacktoLineAfterOvertake?</label>
+			<nail x="-314" y="-697"/>
+			<nail x="-314" y="-918"/>
+			<nail x="-1207" y="-918"/>
+			<nail x="-1207" y="-697"/>
+		</transition>
+		<transition id="id46">
+			<source ref="id41"/>
+			<target ref="id38"/>
+			<label kind="synchronisation" x="-1104" y="-871">Parked?</label>
+			<nail x="-1122" y="-858"/>
+		</transition>
+		<transition id="id47">
+			<source ref="id39"/>
+			<target ref="id43"/>
+			<label kind="synchronisation" x="-653" y="-646">GreenObstacle?</label>
+		</transition>
+		<transition id="id48">
+			<source ref="id39"/>
+			<target ref="id42"/>
+			<label kind="synchronisation" x="-653" y="-714">RedObstacle?</label>
+		</transition>
+		<transition id="id49">
+			<source ref="id39"/>
+			<target ref="id41"/>
+			<label kind="synchronisation" x="-653" y="-790">BlueObstacle?</label>
+		</transition>
+		<transition id="id50">
+			<source ref="id40"/>
+			<target ref="id39"/>
+			<label kind="synchronisation" x="-799" y="-722">Obstacle?</label>
+		</transition>
+		<transition id="id51">
+			<source ref="id37"/>
+			<target ref="id40"/>
+		</transition>
+		<transition id="id52">
+			<source ref="id38"/>
+			<target ref="id37"/>
+			<label kind="synchronisation" x="-1062" y="-697">Move?</label>
+		</transition>
+	</template>
+	<system>// Place template instantiations here.
+Car_System=Car();
+Left_LineDetect=LeftLineDetect();
+Right_LineDetect=RightLineDetect();
+Obstacles_Detection=Obstacles();
+// List one or more processes to be composed into a system.
+system Left_LineDetect,Right_LineDetect,Car_System,Obstacles_Detection;</system>
+	<queries>
+		<query>
+			<formula>A[] not deadlock</formula>
+			<comment/>
+			<result outcome="success" type="quality" timestamp="2025-06-04 13:53:58 +0200">
+			</result>
+		</query>
+	</queries>
+</nta>
