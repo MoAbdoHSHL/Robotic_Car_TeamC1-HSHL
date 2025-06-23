@@ -2,10 +2,9 @@
 <!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.6//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_6.dtd'>
 <nta>
 	<declaration>// Place global declarations here.
-chan  Moveforwardfromright, TurnLeft, MoveforwardfromLeft, TurnRight, GreenObstacle, RedObstacle, BlueObstacle, Parked, Obstacle,Move,Rotate180andMoveForward,BacktoLineAfterMove;
-bool RedObstacle_Works = false;
-bool GreenObstacle_Works = false;
-bool BlueObstacle_Works = false;</declaration>
+chan  Moveforwardfromright, TurnLeft, MoveforwardfromLeft, TurnRight, GreenObstacle, RedObstacle, UnknownObstacle, Parked, Obstacle,Move,OvertakeObject,BacktoLineAfterMove,Restart;
+
+</declaration>
 	<template>
 		<name>Car</name>
 		<location id="id0" x="0" y="-127">
@@ -24,13 +23,13 @@ bool BlueObstacle_Works = false;</declaration>
 			<name x="-325" y="-128">SwitchOn</name>
 		</location>
 		<location id="id5" x="229" y="-144">
-			<name x="246" y="-161">Stop</name>
+			<name x="246" y="-161">ColourCheck</name>
 		</location>
 		<location id="id6" x="8" y="59">
 			<name x="-2" y="25">Movetheobstacle</name>
 		</location>
 		<location id="id7" x="-212" y="25">
-			<name x="-222" y="-9">Park</name>
+			<name x="-221" y="-8">Stop</name>
 		</location>
 		<init ref="id4"/>
 		<transition id="id8">
@@ -56,8 +55,7 @@ bool BlueObstacle_Works = false;</declaration>
 		<transition id="id12">
 			<source ref="id0"/>
 			<target ref="id7"/>
-			<label kind="guard" x="-314" y="-76">GreenObstacle_Works==false||RedObstacle_Works==false</label>
-			<label kind="synchronisation" x="-194" y="-68">BlueObstacle!</label>
+			<label kind="synchronisation" x="-194" y="-68">UnknownObstacle!</label>
 		</transition>
 		<transition id="id13">
 			<source ref="id6"/>
@@ -68,19 +66,17 @@ bool BlueObstacle_Works = false;</declaration>
 		<transition id="id14">
 			<source ref="id0"/>
 			<target ref="id6"/>
-			<label kind="guard" x="-85" y="17">RedObstacle_Works==false||BlueObstacle_Works==false</label>
 			<label kind="synchronisation" x="-34" y="-34">GreenObstacle!</label>
 		</transition>
 		<transition id="id15">
 			<source ref="id3"/>
 			<target ref="id0"/>
-			<label kind="synchronisation" x="136" y="8">Rotate180andMoveForward!</label>
+			<label kind="synchronisation" x="136" y="8">OvertakeObject!</label>
 			<nail x="178" y="25"/>
 		</transition>
 		<transition id="id16">
 			<source ref="id0"/>
 			<target ref="id3"/>
-			<label kind="guard" x="34" y="-127">GreenObstacle_Works==false||BlueObstacle_Works==false</label>
 			<label kind="synchronisation" x="85" y="-102">RedObstacle!</label>
 		</transition>
 		<transition id="id17">
@@ -195,7 +191,7 @@ bool BlueObstacle_Works = false;</declaration>
 			<name x="-909" y="-680">Obstecledetected</name>
 		</location>
 		<location id="id41" x="-476" y="-850">
-			<name x="-486" y="-884">BlueObject</name>
+			<name x="-486" y="-884">UnknownObject</name>
 		</location>
 		<location id="id42" x="-433" y="-697">
 			<name x="-443" y="-731">RedObject</name>
@@ -207,17 +203,15 @@ bool BlueObstacle_Works = false;</declaration>
 		<transition id="id44">
 			<source ref="id43"/>
 			<target ref="id38"/>
-			<label kind="guard" x="-1095" y="-595">GreenObstacle_Works == true</label>
 			<label kind="synchronisation" x="-1095" y="-578">BacktoLineAfterMove?</label>
-			<label kind="assignment" x="-1095" y="-561">GreenObstacle_Works = false</label>
 			<nail x="-1113" y="-561"/>
+			<nail x="-1113" y="-663"/>
+			<nail x="-1113" y="-671"/>
 		</transition>
 		<transition id="id45">
 			<source ref="id42"/>
 			<target ref="id38"/>
-			<label kind="guard" x="-415" y="-731">RedObstacle_Works == true</label>
-			<label kind="synchronisation" x="-415" y="-714">Rotate180andMoveForward?</label>
-			<label kind="assignment" x="-415" y="-697">RedObstacle_Works = false</label>
+			<label kind="synchronisation" x="-415" y="-714">OvertakeObject?</label>
 			<nail x="-314" y="-697"/>
 			<nail x="-314" y="-918"/>
 			<nail x="-1207" y="-918"/>
@@ -226,31 +220,23 @@ bool BlueObstacle_Works = false;</declaration>
 		<transition id="id46">
 			<source ref="id41"/>
 			<target ref="id38"/>
-			<label kind="guard" x="-1104" y="-888">BlueObstacle_Works == true</label>
-			<label kind="synchronisation" x="-1104" y="-871">Parked?</label>
-			<label kind="assignment" x="-1104" y="-854">BlueObstacle_Works = false</label>
+			<label kind="synchronisation" x="-1003" y="-884">Parked?</label>
 			<nail x="-1122" y="-858"/>
 		</transition>
 		<transition id="id47">
 			<source ref="id39"/>
 			<target ref="id43"/>
-			<label kind="guard" x="-653" y="-663">GreenObstacle_Works == false</label>
 			<label kind="synchronisation" x="-653" y="-646">GreenObstacle?</label>
-			<label kind="assignment" x="-653" y="-629">GreenObstacle_Works = true</label>
 		</transition>
 		<transition id="id48">
 			<source ref="id39"/>
 			<target ref="id42"/>
-			<label kind="guard" x="-653" y="-731">RedObstacle_Works == false</label>
 			<label kind="synchronisation" x="-653" y="-714">RedObstacle?</label>
-			<label kind="assignment" x="-653" y="-697">RedObstacle_Works = true</label>
 		</transition>
 		<transition id="id49">
 			<source ref="id39"/>
 			<target ref="id41"/>
-			<label kind="guard" x="-653" y="-807">BlueObstacle_Works == false</label>
-			<label kind="synchronisation" x="-653" y="-790">BlueObstacle?</label>
-			<label kind="assignment" x="-653" y="-773">BlueObstacle_Works = true</label>
+			<label kind="synchronisation" x="-653" y="-790">UnknownObstacle?</label>
 		</transition>
 		<transition id="id50">
 			<source ref="id40"/>
