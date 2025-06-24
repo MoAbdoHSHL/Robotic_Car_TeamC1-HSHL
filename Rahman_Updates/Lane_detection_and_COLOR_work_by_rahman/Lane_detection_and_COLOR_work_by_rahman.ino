@@ -11,8 +11,8 @@
 #define echoPin 13
 #define S0 A2
 #define S1 A1
-#define S2 0
-#define S3 1
+#define S2 2
+#define S3 3
 #define colorOut A0
 #define servoPin 4
 #define SERVO_CENTER 70
